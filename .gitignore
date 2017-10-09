@@ -1,0 +1,9 @@
+.DS_Store
+*.pyc
+*.csv
+conn.py
+.idea
+.vscode
+build
+dist
+*.pkl
