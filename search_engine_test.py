@@ -1,4 +1,4 @@
-# http://aakashjapi.com/fuckin-search-engines-how-do-they-work/
+# fuckin-search-engines-how-do-they-work/
 import sys
 import numpy as np
 

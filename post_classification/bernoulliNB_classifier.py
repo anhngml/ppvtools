@@ -1,4 +1,4 @@
-# https://machinelearningcoban.com/2017/08/08/nbc/
+# machinelearningcoban /2017/08/08/nbc/
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.metrics import accuracy_score
 from sklearn.externals import joblib
