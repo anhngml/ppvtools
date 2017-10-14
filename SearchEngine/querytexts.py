@@ -2,6 +2,7 @@ import buildindex
 import re
 import numpy as np
 import os
+import math
 # import pickle
 
 # NEED TO TEST MORE.
@@ -37,7 +38,7 @@ class Query:
         pattern = re.compile('[\W_]+')
         word = pattern.sub(' ', word)
         if word in self.invertedIndex.keys():
-            return self.rankResults([filename for filename in self.invertedIndex[word].keys()], word)
+            return self.rankResults([filename for filename in self.invertedIndex[word].keys()], word)[0]
         else:
             return []
 
@@ -92,7 +93,7 @@ class Query:
         magnitude = pow(sum(map(lambda x: x**2, queryVec)), .5)
         freq = self.termfreq(self.index.getUniques(), query)
         # print('THIS IS THE FREQ')
-        tf = [x / magnitude for x in freq]
+        tf = [x / magnitude for x in freq] if magnitude != 0 else [x for x in freq]
         final = [tf[i] * queryidf[i]
                  for i in range(len(self.index.getUniques()))]
         # print(len([x for x in queryidf if x != 0]) - len(queryidf))
@@ -119,18 +120,27 @@ class Query:
             return 0
         return sum([x * y for x, y in zip(doc1, doc2)])
 
+    def vec_length(self, vec):
+        result = math.sqrt(sum(x * x for x in vec))
+        if result == 0:
+            result = 1
+        return result
+
     def rankResults(self, resultDocs, query):
         vectors = self.make_vectors(resultDocs)
         # print(vectors)
         queryVec = self.query_vec(query)
         # print(queryVec)
-        results = [[self.dotProduct(vectors[result], queryVec), result]
-                   for result in resultDocs]
+        results = [[self.dotProduct(vectors[result], queryVec) /
+                    (self.vec_length(queryVec) *
+                     self.vec_length(vectors[result])),
+                    result] for result in resultDocs]
         # print(results)
         results.sort(key=lambda x: x[0], reverse=True)
         # print(results)
+        ranks = [x[0] for x in results]
         results = [x[1] for x in results]
-        return results
+        return results, ranks
 
 
 """Do this:

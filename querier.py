@@ -72,8 +72,8 @@ class answer:
                                                is bytes else el for el in row.values()]) for row in rows])
             else:
                 result = rows
-            if len(result) == 1:
-                result = result[0]
+            # if len(result) == 1:
+            #     result = result[0]
             return result
         except StopIteration:
             self.empty = True

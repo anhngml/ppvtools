@@ -18,7 +18,10 @@ def main():
     # texts = np.array(['{} | {}'.format(
     #     a, b) for a, b in zip(lands[:, 1], lands[:, 2])])
 
-    if lands is None or lands.shape[0] < 1:
+    if lands is None:
+        return False
+
+    if len(lands.shape) < 1 or lands.shape[0] < 1:
         return False
 
     texts = np.array([a for a in lands[:, 1]])
@@ -29,12 +32,23 @@ def main():
 
     # for id, text, proba, cls in zip(lands[:, 0], lands[:, 1], pred, clses):
     for id, proba in zip(lands[:, 0], pred):
-        query = query_builder.upsert(
-            'fs_lands',
-            id=int(id),
-            tin_rac=proba[1]
-        )
-        querier(query).perform_task()
+        rac = proba[1]
+        pub = 2 if rac >= 50 else -1
+        if pub == 2:
+            query = query_builder.upsert(
+                'fs_lands',
+                id=int(id),
+                tin_rac=proba[1],
+                published=2
+            )
+            querier(query).perform_task()
+        else:
+            query = query_builder.upsert(
+                'fs_lands',
+                id=int(id),
+                tin_rac=proba[1],
+            )
+            querier(query).perform_task()
 
         # if cls == 1:
         #     query = query_builder.upsert(
