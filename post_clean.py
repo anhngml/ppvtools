@@ -10,7 +10,7 @@ from bernoulliNB_classifier import Classifier
 
 
 def main():
-    fs_lands_question = """SELECT id, title, content FROM fs_lands WHERE (source_type='facebookcom' AND tin_rac=-1) LIMIT 5000"""
+    fs_lands_question = """SELECT id, title, content FROM fs_lands WHERE (source_type='facebookcom' AND tin_rac=-1 AND published=0) LIMIT 5000"""
     ans = answer(querier(fs_lands_question,
                          one_time_answer=True), auto_decode=True)
 
@@ -49,23 +49,6 @@ def main():
                 tin_rac=proba[1],
             )
             querier(query).perform_task()
-
-        # if cls == 1:
-        #     query = query_builder.upsert(
-        #         'fs_lands',
-        #         id=int(id),
-        #         tin_rac=1
-        #     )
-        #     querier(query).perform_task()
-
-        #     # print('{}: {} => {} => {}'.format(id, text, proba, cls))
-        # else:
-        #     query = query_builder.upsert(
-        #         'fs_lands',
-        #         id=int(id),
-        #         tin_rac=-1
-        #     )
-        #     querier(query).perform_task()
 
     l_clses = list(clses)
     print('So tin rac: {}\n'.format(l_clses.count(1)))
