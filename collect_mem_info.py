@@ -3,6 +3,7 @@ from conn import conn
 import query_builder
 import numpy as np
 from tqdm import tqdm
+from search_email import SearchEmail
 
 
 def collect_members_inf():
@@ -95,6 +96,9 @@ def collect_members_inf():
                     poster_facebook = m_land[11] if poster_facebook == '' else poster_facebook
                     background_color = m_land[9] if background_color == '' else background_color
                     text_color = m_land[10] if text_color == '' else text_color
+
+                if poster_email == '':
+                    poster_email = SearchEmail(m_mobil)
 
                 query = query_builder.upsert(
                     'fs_members',

@@ -12,14 +12,18 @@ import query_builder
 
 
 def main(reindex=False):
-    # Ngũ Hành Sơn(id: 1594) - WHERE id = 1594
+    # Ngũ Hành Sơn(id: 1594) - WHERE id = 1594 /
+    group_by_street_query = """SELECT street_id, street_name, count(*) as count FROM fs_lands WHERE street_id = 5506 GROUP BY street_id ORDER BY count"""
     fs_local_streets_query = """SELECT id, name, city_id, district_id FROM fs_local_streets"""
-    ans = answer(querier(fs_local_streets_query,
+    ans = answer(querier(group_by_street_query,
                          one_time_answer=True), auto_decode=True)
 
     streets = ans.get_answer()
 
     for street in streets:
+        if int(street[2]) < 2:
+            continue
+
         fs_lands_question = """SELECT id, content, title FROM fs_lands WHERE (duplicates IS NULL OR duplicates=id) AND street_id = {}""".format(
             street[0])
 
